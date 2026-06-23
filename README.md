@@ -10,7 +10,7 @@
   <sub>Kodi 21 (Omega) &bull; video add-on &bull; GPL-3.0-or-later</sub>
 </p>
 
----
+</br></br>
 
 # What it is
 
