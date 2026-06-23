@@ -1,0 +1,14 @@
+# Development docs - kept locally, not part of the published add-on
+PLAN.md
+WORKING_DOC.md
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Editor / OS cruft
+*.psd
+.vscode/
+.DS_Store
+Thumbs.db
