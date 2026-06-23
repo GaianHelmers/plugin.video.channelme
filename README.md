@@ -22,11 +22,16 @@ advancing in episode order while the choice of *which* title plays next is rando
 No scraping, no external services: it reads your library through Kodi's own
 JSON-RPC, so it inherits your titles, episode order, artwork and watched state.
 
-</br></br>
+</br>
+<img width="1280" height="720" alt="Screen Shot 2026-06-22 at 10 48 14 29 PM" src="https://github.com/user-attachments/assets/7df2bc92-1c8a-4b55-994b-57eb91cdef0a" />
+
+</br>
 <!-- ============================== Features ============================= -->
 # Features
 
 ### Channels
+<img width="1280" height="720" alt="Screen Shot 2026-06-22 at 10 54 40 410 PM" src="https://github.com/user-attachments/assets/3010130c-c72c-4686-a50d-9d1576feeb3c" />
+
 - **Build a channel from anything in your library** - TV shows, movie sets
   (collections), and individual movies, in any combination.
 - **Folder sources** - add a folder of loose video files (e.g. under `/Videos/`)
@@ -34,6 +39,15 @@ JSON-RPC, so it inherits your titles, episode order, artwork and watched state.
   the videos as one total series.
 - **Channel artwork** - each channel borrows artwork from one of its titles, either
   a random title (re-rolled on each refresh) or one you pin.
+</br>
+
+### The editor
+<img width="1280" height="720" alt="Screen Shot 2026-06-22 at 10 52 04 438 PM" src="https://github.com/user-attachments/assets/a9cfa100-7f98-4ffd-a806-9efdd14c6f14" />
+
+- **Inline title checklist** - tick titles directly in the list; no popped dialogs.
+- **Type filters** - TV / Sets / Movies / **Files**, plus a substring search.
+- **Files filter** - shows the folder paths already on a channel so you can keep or
+  drop them; deselect + Save removes a path from the channel.
 </br>
 
 ### Playback
@@ -51,19 +65,16 @@ JSON-RPC, so it inherits your titles, episode order, artwork and watched state.
   (1-20 or unlimited).
 - **Starting episode** - set where in a show/collection the channel begins for easy setup, or correction.
 </br>
+<img width="1280" height="720" alt="Screen Shot 2026-06-22 at 10 51 49 740 PM" src="https://github.com/user-attachments/assets/2d851d10-584c-4321-af5a-f0c0e16516c5" />
+
 
 ### Library context menu (right-click any library item)
+<img width="1280" height="720" alt="Screen Shot 2026-06-22 at 10 46 42 752 PM" src="https://github.com/user-attachments/assets/e88d9d34-5579-4cef-8016-287b0e0e8874" />
+
 - **Play Randomized** - instantly play a **TV show, movie collection, season, or
   folder** in pure-random channel style, without saving a channel. On demand.
 - **Add to Channel** - append a **show, collection, or folder** to an existing
   channel (or spin up a new one).
-</br>
-
-### The editor
-- **Inline title checklist** - tick titles directly in the list; no popped dialogs.
-- **Type filters** - TV / Sets / Movies / **Files**, plus a substring search.
-- **Files filter** - shows the folder paths already on a channel so you can keep or
-  drop them; deselect + Save removes a path from the channel.
 </br>
 
 ### Browsing
