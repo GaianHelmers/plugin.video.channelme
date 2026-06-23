@@ -126,19 +126,6 @@ def build_items(items, mode, cursor, count, max_consecutive=1,
     return picks, positions, last_key, run
 
 
-def cursor_from_positions(positions):
-    """Rebuild a lookahead cursor from queue entries already generated. Each title
-    continues one past the highest index it reached; iterating in order means the
-    last occurrence wins, which IS the next episode that title should generate.
-    Used after a manual jump so the rebuilt tail keeps counting up from the build
-    state the user sees, instead of snapping back to the (lagging) resume pointer."""
-    cursor = {}
-    for entry in positions:
-        if len(entry) >= 2:
-            cursor[entry[0]] = entry[1] + 1
-    return cursor
-
-
 def make_list_item(pick):
     """Build a playable Kodi ListItem for one queue entry."""
     list_item = xbmcgui.ListItem(label=pick['label'])

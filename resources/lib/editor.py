@@ -28,12 +28,18 @@ import xbmcgui
 from resources.lib import library
 from resources.lib import storage
 
-# Reopen guard: after Save closes the dialog, a fast second click can fall through
-# to the channel list and re-launch a blank editor. We stamp the close time on the
-# Home window and ignore any open that arrives within this window.
+# Reopen guard. Two Home-window (10000) properties, shared across all plugin script
+# invocations, stop a stray second editor from opening:
+#   - BUSY is set for the whole time an editor is open, so a buffered context-action
+#     / click that dispatches a second add/edit invocation is rejected instead of
+#     stacking a second modal dialog (revealed when the first closes, or as playback
+#     starts). It carries a timestamp so a killed script can't lock editing forever.
+#   - CLOSED stamps the close time, so a click buffered just past Save is also swallowed.
 _GUARD_WINDOW = 10000
 _GUARD_PROP = 'channelme_editor_closed'
+_BUSY_PROP = 'channelme_editor_busy'
 _GUARD_SECONDS = 0.8
+_BUSY_MAX_SECONDS = 600    # a BUSY flag older than this is stale (crashed/killed run)
 
 # ----------------------------------------------------------------------------
 # Control IDs (must match the skin XML)
@@ -476,24 +482,37 @@ class ChannelEditor(xbmcgui.WindowXMLDialog):
 # Entry point used by gui.py
 # ----------------------------------------------------------------------------
 
+def _within(home, prop, seconds, now):
+    """True if `prop` holds a timestamp newer than `seconds` ago."""
+    value = home.getProperty(prop)
+    if not value:
+        return False
+    try:
+        return now - float(value) < seconds
+    except ValueError:
+        return False
+
+
 def run(addon_path, channel, is_new):
     """Open the editor on `channel` (a working dict). Returns True if saved.
-    A stray click buffered past Save (which lands on the channel list and would
-    otherwise pop a blank editor) is swallowed by the reopen guard."""
+    Rejected (returns False, opens nothing) when another editor is already open or
+    one closed a moment ago - so a buffered/stray add/edit dispatch can never stack
+    a second dialog or re-pop a blank editor."""
     home = xbmcgui.Window(_GUARD_WINDOW)
-    last = home.getProperty(_GUARD_PROP)
-    if last:
-        try:
-            if time.time() - float(last) < _GUARD_SECONDS:
-                return False
-        except ValueError:
-            pass
+    now = time.time()
+    if _within(home, _BUSY_PROP, _BUSY_MAX_SECONDS, now):     # an editor is already open
+        return False
+    if _within(home, _GUARD_PROP, _GUARD_SECONDS, now):       # one closed a moment ago
+        return False
 
-    dialog = ChannelEditor('script-channelme-editor.xml', addon_path, 'Default', '1080i',
-                           channel=channel, is_new=is_new)
-    dialog.doModal()
-    saved = dialog.saved
-    del dialog
-
-    home.setProperty(_GUARD_PROP, str(time.time()))
+    home.setProperty(_BUSY_PROP, str(now))
+    try:
+        dialog = ChannelEditor('script-channelme-editor.xml', addon_path, 'Default', '1080i',
+                               channel=channel, is_new=is_new)
+        dialog.doModal()
+        saved = dialog.saved
+        del dialog
+    finally:
+        home.setProperty(_BUSY_PROP, '')
+        home.setProperty(_GUARD_PROP, str(time.time()))
     return saved

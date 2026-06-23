@@ -114,8 +114,10 @@ def record_progress():
 
 
 def regenerate_after_jump(pos):
-    """Rebuild the queue after a manual jump: skipped shows fall back to their last
-    watched episode; the jumped-to show continues from the current one."""
+    """Rebuild the queue after a manual jump so the jumped-to episode becomes the new
+    entry #0: BOTH the stale tail after it AND the already-shown backlog before it are
+    removed, then a fresh forward run is generated. Skipped shows fall back to their
+    last watched episode; the jumped-to show continues from the current one."""
     data = storage.load()
     playback = data.get('playback')
     if not playback or playback.get('mode') != 'serial_random':
@@ -124,26 +126,28 @@ def regenerate_after_jump(pos):
     if pos < 0 or pos >= len(positions):
         return
 
-    current_key, current_index = positions[pos][0], positions[pos][1]
+    current = positions[pos]
+    current_key, current_index = current[0], current[1]
     channel_id = playback.get('channel_id')
 
-    # Continue every show from where the SURVIVING queue already had it - this is
-    # the build state the user sees, so skipping ahead never snaps a show back to
-    # episode 1 (which the lagging resume pointer would have caused).
-    lookahead = scheduler.cursor_from_positions(positions[:pos + 1])
-    # Shows that only appeared in the now-trimmed tail aren't in the surviving
-    # prefix; fall back to their last actually-watched episode (resume pointer).
-    for key, idx in data.get('state', {}).get(channel_id, {}).get('pointers', {}).items():
-        lookahead.setdefault(key, idx)
-    lookahead[current_key] = current_index + 1   # current show keeps going
+    # Seed the rebuilt tail from the RESUME POINTERS (each show's last actually-watched
+    # episode), NOT the generated build state. The episodes between the start and the
+    # jump were queued but SKIPPED - never watched - so they must not advance anyone.
+    # Every other show therefore resumes from where it was really left (episode 1 on a
+    # fresh channel: 1, 2, 3 ...); only the jumped-to show continues forward from here.
+    pointers = data.get('state', {}).get(channel_id, {}).get('pointers', {})
+    lookahead = dict(pointers)
+    lookahead[current_key] = current_index + 1   # the show we jumped into keeps going
 
-    # Step off the playlist window first, then trim the now-stale future from the
-    # live playlist (top-down by position).
+    # Step off the playlist window first, then rebuild the live playlist: drop the
+    # stale future (top-down after pos), then the played/skipped backlog (the first
+    # `pos` items) so the still-playing jumped-to item is left as the new index 0.
     _leave_playlist_window()
     playlist = _video_playlist()
-    trimmed = max(0, playlist.size() - 1 - pos)
     for index in range(playlist.size() - 1, pos, -1):
         _playlist_remove(index)
+    for _ in range(pos):
+        _playlist_remove(0)
 
     picks, new_positions, last_key, run = scheduler.build_items(
         playback['titles'], 'serial_random', lookahead, TOPUP_BATCH,
@@ -152,15 +156,18 @@ def regenerate_after_jump(pos):
     for pick in picks:
         playlist.add(pick['file'], scheduler.make_list_item(pick))
 
-    _log('regen @pos {0} ({1}#{2}): trimmed {3}, appended {4}; next={5}'.format(
-        pos, current_key, current_index, trimmed, len(picks),
+    _log('regen @pos {0} ({1}#{2}): rebuilt from scratch, appended {3}; next={4}'.format(
+        pos, current_key, current_index, len(picks),
         [p['label'] for p in picks[:4]]))
 
-    playback['positions'] = positions[:pos + 1] + new_positions
+    playback['positions'] = [current] + new_positions
     playback['lookahead'] = lookahead
     playback['last_key'] = last_key
     playback['run'] = run
     storage.save(data)
+    # The jumped-to item is now index 0; the next item to start is index 1, a normal
+    # +1 - so reset the jump tracker, else detect_jump would see a false backwards jump.
+    _LAST['pos'] = 0
 
 
 def topup():
