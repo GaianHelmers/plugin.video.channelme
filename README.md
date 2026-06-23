@@ -24,8 +24,8 @@ JSON-RPC, so it inherits your titles, episode order, artwork and watched state.
 
 </br>
 <img width="1280" height="720" alt="Screen Shot 2026-06-22 at 10 48 14 29 PM" src="https://github.com/user-attachments/assets/7df2bc92-1c8a-4b55-994b-57eb91cdef0a" />
-
 </br>
+
 <!-- ============================== Features ============================= -->
 # Features
 
@@ -89,6 +89,7 @@ JSON-RPC, so it inherits your titles, episode order, artwork and watched state.
 
 </br></br>
 <!-- ============================ Installation =========================== -->
+
 # Installation
 
 1. Download the latest `plugin.video.channelme` ZIP (or `git archive` this repo).
