@@ -66,6 +66,7 @@ JSON-RPC, so it inherits your titles, episode order, artwork and watched state.
 </br>
 <img width="960" height="540" alt="mode" src="https://github.com/user-attachments/assets/9bdf7403-2a13-45c6-8654-3bac026529e5" />
 </br>
+
 - **Endless** - a background service tops the queue up forever, so a channel never
   runs dry until you stop it.
 - **Resume per title** - stop mid-episode and that show resumes exactly where it
