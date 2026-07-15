@@ -51,24 +51,27 @@ JSON-RPC, so it inherits your titles, episode order, artwork and watched state.
   drop them; deselect + Save removes a path from the channel.
 </br>
 
+### Settings
+<img width="960" height="540" alt="Settings" src="https://github.com/user-attachments/assets/72ad8c08-8f7d-4a27-b498-f943a828f2d6" />
+</br>
+
 ### Playback
 - **Two shuffle modes:**
   - *Serialized random* - each show plays in true episode order; the channel picks
     which show airs next at random.
   - *Pure random* - any episode / film / file at any time.
+- **Selection weight** - bias how often each show is picked (1.0x - 3.0x), so a large
+  library shows up proportionally more without exhausting your smaller shows. Weight
+  (how *often*) and back-to-back (how *long a run*) are independent dials.
+</br>
+<img width="960" height="540" alt="mode" src="https://github.com/user-attachments/assets/9bdf7403-2a13-45c6-8654-3bac026529e5" />
+</br>
 - **Endless** - a background service tops the queue up forever, so a channel never
   runs dry until you stop it.
 - **Resume per title** - stop mid-episode and that show resumes exactly where it
   was the next time the channel plays it.
 - **Skip-aware** - jump ahead or back in the generated queue and the upcoming line-up
   regenerates sensibly instead of pushing your _last-viewed_ dozens of episodes ahead.
-- **Back-to-back, per channel and per show** - cap how many episodes of the same show
-  air in a row (1-30). Set a channel default (*Up to N*, or *Always N* for a fixed run),
-  then override any single show - handy for letting one dense show run in longer blocks
-  among smaller ones.
-- **Selection weight** - bias how often each show is picked (1.0x - 3.0x), so a large
-  library shows up proportionally more without exhausting your smaller shows. Weight
-  (how *often*) and back-to-back (how *long a run*) are independent dials.
 - **No-repeat shuffle** - in pure random, an episode will not repeat until the rest of
   that show has played.
 - **Sleep timer** - optionally stop playback after a set time, with an on-screen
@@ -77,8 +80,13 @@ JSON-RPC, so it inherits your titles, episode order, artwork and watched state.
   counts or resume points (on by default), so a background channel never messes up your
   "continue watching".
 - **Starting episode** - set where in a show/collection the channel begins for easy setup, or correction.
+- **Back-to-back, per channel and per show** - cap how many episodes of the same show
+  air in a row (1-30). Set a channel default (*Up to N*, or *Always N* for a fixed run),
+  then override any single show - handy for letting one dense show run in longer blocks
+  among smaller ones.
 </br>
-<img width="1280" height="720" alt="Screen Shot 2026-06-22 at 10 51 49 740 PM" src="https://github.com/user-attachments/assets/2d851d10-584c-4321-af5a-f0c0e16516c5" />
+<img width="960" height="540" alt="Back-to-Back" src="https://github.com/user-attachments/assets/478648c8-0256-4f39-927b-97f3222ce0e2" />
+
 
 
 ### Library context menu (right-click any library item)
